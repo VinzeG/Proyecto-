@@ -1,0 +1,74 @@
+#Importando librerias
+import tkinter as tk
+
+from tkinter import *
+from tkinter import ttk
+from tkinter import messagebox
+
+class Formulario_Personal:
+    def Formulario():
+        try:
+            base= Tk()
+            base.geometry("1500x300")
+            base.title("Control de Acceso del Personal")
+
+            groupBox =LabelFrame(base,text="Datos del Personal",padx=5,pady=5)
+            groupBox.grid(row=0,column=0,padx=10,pady=10)
+            
+            label_codigo=Label(groupBox,text="Codigo: ", width=13,font=("arial,12")).grid(row=0,column=0)
+            textbox_Codigo=Entry(groupBox)
+            textbox_Codigo.grid(row=0,column=1)
+
+            label_nombre=Label(groupBox,text="Nombre: ", width=13,font=("arial,12")).grid(row=1,column=0)
+            textbox_Nombre=Entry(groupBox)
+            textbox_Nombre.grid(row=1,column=1)
+
+            label_apellido=Label(groupBox,text="Apellido: ", width=13,font=("arial,12")).grid(row=2,column=0)
+            textbox_Apellido=Entry(groupBox)
+            textbox_Apellido.grid(row=2,column=1)
+
+            label_cargo=Label(groupBox,text="Cargo: ", width=13,font=("arial,12")).grid(row=3,column=0)
+            textbox_Cargo=Entry(groupBox)
+            textbox_Cargo.grid(row=3,column=1)
+
+            label_sexo=Label(groupBox,text="Sexo: ", width=13,font=("arial,12")).grid(row=4,column=0)
+            select_sexo=tk.StringVar()
+            combo=ttk.Combobox(groupBox,values=["Masculino","Femenino"],textvariable=select_sexo)
+            combo.grid(row=4,column=1)
+
+            select_sexo.set("Masculino")
+
+            Button(groupBox,text="Guardar",width=10).grid(row=6,column=0)
+            Button(groupBox,text="Modificar",width=10).grid(row=6,column=1)
+            Button(groupBox,text="Eliminar",width=10).grid(row=6,column=2)
+
+            groupBox2 =LabelFrame(base,text="Lista del Personal",padx=5,pady=5)
+            groupBox2.grid(row=0,column=1,padx=5,pady=5)
+        
+            #Creando Treeview y configurando columnas
+
+            tree=ttk.Treeview(groupBox2,columns=("ID","Nombre","Apellido","Cargo","Sexo"),show='headings',height=5,)
+            
+            tree.column("# 1",anchor=CENTER)
+            tree.heading("# 1",text="ID")
+            
+            tree.column("# 2",anchor=CENTER)
+            tree.heading("# 2",text="Nombre")
+
+            tree.column("# 3",anchor=CENTER)
+            tree.heading("# 3",text="Apellido")
+
+            tree.column("# 4",anchor=CENTER)
+            tree.heading("# 4",text="Cargo")
+
+            tree.column("# 5",anchor=CENTER)
+            tree.heading("# 5",text="Sexo")
+
+            tree.pack()
+
+            base.mainloop()
+
+        except ValueError as error:
+            print("Error al mostrar la interfaz grafica, error:{}".format(error))
+
+    Formulario()
