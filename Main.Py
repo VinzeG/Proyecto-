@@ -1,4 +1,3 @@
-#Importando librerias
 import tkinter as tk
 
 from tkinter import *
@@ -65,6 +64,26 @@ def Guardar_registro():
     
     except ValueError as error:
         print("Error al ingresar datos{}".format(error))
+
+def Eliminar_registro():
+    global textbox_Codigo,textbox_Nombre,textbox_Apellido,textbox_Cargo
+    try:
+        if textbox_Codigo is None:
+            print("El widget no ha inicializado")
+            return
+
+        id_usu = textbox_Codigo.get()
+        CPersonal.Eliminar_personal(id_usu)
+        messagebox.showinfo("Informacion","Los datos fueron eliminados")
+
+        Actualizar_lista()
+        textbox_Codigo.delete(0,END)
+        textbox_Nombre.delete(0,END)
+        textbox_Apellido.delete(0,END)
+        textbox_Cargo.delete(0,END)
+    except ValueError as error:
+        print("Error al eliminar los datos{}",format(error))
+
 
 
 class Formulario_Personal:
@@ -142,7 +161,7 @@ class Formulario_Personal:
 
             Button(groupBox,text="Guardar",width=10,command=Guardar_registro).grid(row=6,column=0)
             Button(groupBox,text="Modificar",width=10).grid(row=6,column=1)
-            Button(groupBox,text="Eliminar",width=10).grid(row=6,column=2)
+            Button(groupBox,text="Eliminar",width=10,command=Eliminar_registro).grid(row=6,column=2)
 
             groupBox2 =LabelFrame(base,text="Lista del Personal",padx=5,pady=5)
             groupBox2.grid(row=0,column=1,padx=5,pady=5)
