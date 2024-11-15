@@ -5,8 +5,110 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 
+#Importando archivos necesarios
+from ConexionBD import *
+from personal import *
+
+def Seleccionar_registro(event):
+    try:
+        Item_seleccionado = tree.focus()
+        if Item_seleccionado:
+            values = tree.item(Item_seleccionado) ['values']
+            textbox_Codigo.delete(0,END)
+            textbox_Codigo.insert(0,values[0])
+
+            textbox_Nombre.delete(0,END)
+            textbox_Nombre.insert(0,values[1])
+
+            textbox_Apellido.delete(0,END)
+            textbox_Apellido.insert(0,values[2])
+            
+            textbox_Cargo.delete(0,END)
+            textbox_Cargo.insert(0,values[3])
+
+            combo.set(values[4])
+    except ValueError as error:
+        print("Error al seleccionar registro{}".format(error))
+
+def Actualizar_lista():
+    global tree
+    try:
+        tree.delete(*tree.get_children())
+        datos = CPersonal.Modificar_personal()
+
+        for row in CPersonal.Modificar_personal():
+            tree.insert("","end",values= row)
+    except ValueError as error:
+            print("Error al mostrar la interfaz grafica, error:{}".format(error))
+
+
+def Guardar_registro():
+    global textbox_Nombre,textbox_Apellido,textbox_Cargo,groupBox,groupBox2,combo
+    try:
+        #Verificando si los widgets estan inicializados
+        if textbox_Nombre is None or textbox_Apellido is None or textbox_Cargo is None or combo is None:
+            print("Los widgets no estan inicializados")
+            return
+        nombre = textbox_Nombre.get()
+        apellido = textbox_Apellido.get()
+        cargo = textbox_Cargo.get()
+        sexo = combo.get()
+
+        CPersonal.Ingresar_personal(nombre,apellido,cargo,sexo)
+        messagebox.showinfo("Informacion","Los datos fueron guardados")
+
+        Actualizar_lista()
+
+        textbox_Nombre.delete(0,END)
+        textbox_Apellido.delete(0,END)
+        textbox_Cargo.delete(0,END)
+    
+    except ValueError as error:
+        print("Error al ingresar datos{}".format(error))
+
+
 class Formulario_Personal:
+
+    #Globalizando los widgets
+    global base
+    base = None
+
+    global groupBox
+    groupBox = None
+
+    global textbox_Codigo
+    textbox_Codigo = None
+
+    global textbox_Nombre
+    textbox_Nombre = None
+
+    global textbox_Apellido
+    textbox_Apellido = None
+
+    global textbox_Cargo
+    textbox_Cargo = None
+
+    global combo
+    combo = None
+
+    global groupBox2
+    groupBox2 = None
+
+    global tree
+    tree = None
+
+    #Formulario
     def Formulario():
+        #Llamando variables globales
+        global base
+        global groupBox
+        global textbox_Nombre
+        global textbox_Apellido
+        global textbox_Cargo
+        global textbox_Codigo
+        global combo
+        global tree
+
         try:
             base= Tk()
             base.geometry("1500x300")
@@ -38,7 +140,7 @@ class Formulario_Personal:
 
             select_sexo.set("Masculino")
 
-            Button(groupBox,text="Guardar",width=10).grid(row=6,column=0)
+            Button(groupBox,text="Guardar",width=10,command=Guardar_registro).grid(row=6,column=0)
             Button(groupBox,text="Modificar",width=10).grid(row=6,column=1)
             Button(groupBox,text="Eliminar",width=10).grid(row=6,column=2)
 
@@ -63,6 +165,11 @@ class Formulario_Personal:
 
             tree.column("# 5",anchor=CENTER)
             tree.heading("# 5",text="Sexo")
+
+            for row in CPersonal.Modificar_personal():
+                tree.insert("","end",values= row)
+
+            tree.bind("<<TreeviewSelect>>",Seleccionar_registro)
 
             tree.pack()
 
