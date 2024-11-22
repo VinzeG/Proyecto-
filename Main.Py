@@ -1,3 +1,4 @@
+#Importando librerias
 import tkinter as tk
 
 from tkinter import *
@@ -84,6 +85,31 @@ def Eliminar_registro():
     except ValueError as error:
         print("Error al eliminar los datos{}",format(error))
 
+def modificar_registro():
+    global textbox_Codigo,textbox_Nombre,textbox_Apellido,textbox_Cargo,combo,groupBox,groupBox2
+
+    try:
+        if textbox_Codigo is None or textbox_Nombre is None or textbox_Apellido is None or textbox_Cargo is None or combo is None:
+            print("Los widgets no estan inicializados")
+            return
+        codigo = textbox_Codigo.get()
+        nombre = textbox_Nombre.get()
+        apellido = textbox_Apellido.get()
+        cargo = textbox_Cargo.get()
+        sexo = combo.get()
+
+        CPersonal.Modif_personal(codigo,nombre,apellido,cargo,sexo)
+        messagebox.showinfo("Informacion","Los datos fueron actualizados")
+
+        Actualizar_lista()
+
+        textbox_Codigo.delete(0,END)
+        textbox_Nombre.delete(0,END)
+        textbox_Apellido.delete(0,END)
+        textbox_Cargo.delete(0,END)
+
+    except ValueError as error:
+        print("Error al eliminar los datos{}",format(error))
 
 
 class Formulario_Personal:
@@ -132,9 +158,12 @@ class Formulario_Personal:
             base= Tk()
             base.geometry("1500x300")
             base.title("Control de Acceso del Personal")
+           
 
             groupBox =LabelFrame(base,text="Datos del Personal",padx=5,pady=5)
             groupBox.grid(row=0,column=0,padx=10,pady=10)
+            groupBox.config(relief="ridge")
+            groupBox.config(bd=15)
             
             label_codigo=Label(groupBox,text="Codigo: ", width=13,font=("arial,12")).grid(row=0,column=0)
             textbox_Codigo=Entry(groupBox)
@@ -152,6 +181,8 @@ class Formulario_Personal:
             textbox_Cargo=Entry(groupBox)
             textbox_Cargo.grid(row=3,column=1)
 
+
+
             label_sexo=Label(groupBox,text="Sexo: ", width=13,font=("arial,12")).grid(row=4,column=0)
             select_sexo=tk.StringVar()
             combo=ttk.Combobox(groupBox,values=["Masculino","Femenino"],textvariable=select_sexo)
@@ -160,11 +191,13 @@ class Formulario_Personal:
             select_sexo.set("Masculino")
 
             Button(groupBox,text="Guardar",width=10,command=Guardar_registro).grid(row=6,column=0)
-            Button(groupBox,text="Modificar",width=10).grid(row=6,column=1)
+            Button(groupBox,text="Modificar",width=10,command=modificar_registro).grid(row=6,column=1)
             Button(groupBox,text="Eliminar",width=10,command=Eliminar_registro).grid(row=6,column=2)
 
             groupBox2 =LabelFrame(base,text="Lista del Personal",padx=5,pady=5)
             groupBox2.grid(row=0,column=1,padx=5,pady=5)
+            groupBox2.config(relief="ridge",bd=15)
+
         
             #Creando Treeview y configurando columnas
 
